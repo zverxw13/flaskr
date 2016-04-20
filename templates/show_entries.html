@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+        <script type="text/javascript">
+         <!--
+            function getConfirmationDeletePost(id){
+               var retVal = confirm("Do you want to delete the post?");
+               if( retVal == true ){
+                  localStorage.setItem('entry_id_2', id);
+                  window.location = "{{ url_for('delete_entry2') }}";
+               }
+               else{
+                  return false;
+               }
+            }
+         //-->
+      </script>
+
+        <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+          <dl>
+            <dt>Title:
+            <dd><input type=text size=30 name=title>
+            <dt>Text:
+            <dd><textarea name=text rows=5 cols=40></textarea>
+            <dd><input type=submit value=Share>
+          </dl>
+        </form>
+
+      <ul class=entries>
+      {% for entry in entries %}
+          <li><h2>{{ entry.title }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <!--<a href="{{ url_for('delete_entry', entry_id=entry.id) }}"><img src="static/delete.png"-->
+                                                                              <!--alt="Delete post" height="19"-->
+                                                                              <!--width="24"></a>-->
+              <img src="static/delete.png" onclick="getConfirmationDeletePost({{entry.id}});" alt="Delete post"
+                   height="19" width="24">
+              </h2>
+              {{ entry.text|safe }}
+      {% else %}
+        <li><em>Unbelievable.  No entries here so far</em>
+      {% endfor %}
+      </ul>
+{% else %}
+    <ul class=entries>
+      {% for entry in entries %}
+          <li><h2>{{ entry.title }}</h2>
+              {{ entry.text|safe }}
+      {% else %}
+        <li><em>Unbelievable.  No entries here so far</em>
+      {% endfor %}
+      </ul>
+{% endif %}
+{% endblock %}
